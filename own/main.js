@@ -1,12 +1,19 @@
-const input = document.getElementById('todo-input');
+/**
+ * global state setup
+ */
 const todoListStorageKey = 'todo-list.todoItems';
 let todoItems = JSON.parse(localStorage.getItem(todoListStorageKey)) || [];
+let state;
 const FilterStates = {
   All: 0,
   Active: 1,
   Completed: 2
 }
-let state;
+
+/**
+ * DOMs
+ */
+const inputDOM = document.getElementById('todo-input');
 const buttonsDOM = [];
 
 for (const key in FilterStates) {
@@ -18,17 +25,23 @@ for (const key in FilterStates) {
   buttonsDOM[FilterStates[key]] = newNode;
 }
 
+/**
+ * initialize
+ */
 setFilter(FilterStates.All);
 
-input.addEventListener('keyup', e => {
+/**
+ * Model/Controller
+ */
+inputDOM.addEventListener('keyup', e => {
   if (isEnter(e) && e.target.value !== '') {
     todoItems.push({
       message: e.target.value,
       isCompleted: false
     });
 
-    refresh();
     e.target.value = '';
+    refresh();
   }
 });
 
@@ -56,11 +69,14 @@ function setFilter(s, t) {
     }
 
     buttonsDOM[s].classList.add('active');
-    
+
     refresh();
   }
 }
 
+/**
+ * View
+ */
 function refresh() {
   const listDOM = document.getElementById('todo-list');
   listDOM.textContent = '';
